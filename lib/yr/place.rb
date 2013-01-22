@@ -16,15 +16,17 @@ module Yr
     end
 
     def weather_url
-     "http://www.yr.no/sted/Norge/#{URI.encode(fylke.capitalize)}/#{URI.encode(kommune.capitalize)}/#{URI.encode(sted.capitalize)}/varsel.xml"
+      url = "http://www.yr.no/sted/Norge/#{URI.encode(fylke.capitalize)}/#{URI.encode(kommune.capitalize)}/#{URI.encode(sted.capitalize)}/varsel.xml"
+      puts url
+      url
     end
 
     def forecast_for(time)
-      forecasts.find{|f| f.time_range.include?(time)}
+      forecasts.find{|f| f.time_range.cover?(time)}
     end
 
     def details_for(time)
-      details.find{|d| d.time_range.include?(time)}
+      details.find{|d| d.time_range.cover?(time)}
     end
 
     def forecasts
@@ -68,8 +70,8 @@ module Yr
         f.title = (e/"title").inner_html
         f.body = (e/"body").inner_html
         f.from = (e["from"])
-        f.to = Time.xmlschema((e["to"]))
-        f.from = Time.xmlschema((e["from"]))
+        f.to = Time.xmlschema((e["to"])) rescue Time.parse((e["to"]))
+        f.from = Time.xmlschema((e["from"])) rescue Time.parse((e["from"]))
         f.place = self
         @forecasts << f
       end
