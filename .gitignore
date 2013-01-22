@@ -4,3 +4,4 @@ irbno
 .DS_Store
 .gemified
 yr_api*.gem
+.idea
